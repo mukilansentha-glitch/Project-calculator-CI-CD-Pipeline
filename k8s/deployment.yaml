@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: devops-calculator
-          image: mukilansentha/calculator-app-project:v2
+          image: 958006149889.dkr.ecr.ap-south-1.amazonaws.com/calculator:v1
           ports:
             - containerPort: 5000
