@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevOps Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 360px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    h1 { font-size: 22px; color: #1a202c; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #718096; margin-bottom: 1.5rem; }
+    label { font-size: 13px; color: #4a5568; display: block; margin-bottom: 4px; }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #1a202c;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: #4299e1; }
+    button {
+      width: 100%;
+      padding: 11px;
+      background: #3182ce;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    button:hover { background: #2b6cb0; }
+    .result {
+      margin-top: 1rem;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      text-align: center;
+      display: none;
+    }
+    .result.success { background: #ebf8ff; color: #2b6cb0; }
+    .result.error { background: #fff5f5; color: #c53030; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>DevOps Calculator</h1>
+    <p class="subtitle">Flask · Jenkins CI/CD · SonarQube</p>
+ 
+    <label for="a">First Number</label>
+    <input type="number" id="a" placeholder="e.g. 10" />
+ 
+    <label for="b">Second Number</label>
+    <input type="number" id="b" placeholder="e.g. 5" />
+ 
+    <label for="operation">Operation</label>
+    <select id="operation">
+      <option value="add">Add</option>
+      <option value="subtract">Subtract</option>
+      <option value="multiply">Multiply</option>
+      <option value="divide">Divide</option>
+    </select>
+ 
+    <button onclick="calculate()">Calculate</button>
+ 
+    <div class="result" id="result"></div>
+  </div>
+ 
+  <script>
+    async function calculate() {
+      const a = document.getElementById('a').value;
+      const b = document.getElementById('b').value;
+      const operation = document.getElementById('operation').value;
+      const resultEl = document.getElementById('result');
+ 
+      resultEl.style.display = 'none';
+ 
+      const res = await fetch('/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ a: parseFloat(a), b: parseFloat(b), operation })
+      });
+ 
+      const data = await res.json();
+      resultEl.style.display = 'block';
+ 
+      if (data.error) {
+        resultEl.className = 'result error';
+        resultEl.textContent = 'Error: ' + data.error;
+      } else {
+        resultEl.className = 'result success';
+        resultEl.textContent = 'Result: ' + data.result;
+      }
+    }
+  </script>
+</body>
+</html>
