@@ -13,7 +13,7 @@ spec:
         app: calculator
     spec:
       containers:
-        - name: Devops-calculator
+        - name: devops-calculator
           image: mukilansentha/calculator-app-project:v2
           ports:
             - containerPort: 5000
